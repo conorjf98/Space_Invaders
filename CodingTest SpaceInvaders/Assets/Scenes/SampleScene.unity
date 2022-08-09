@@ -272,6 +272,9 @@ MonoBehaviour:
   rows: 5
   columns: 11
   spacing: 0.34
+  speed: 0.34
+  dropAmount: 0.2
+  boundaryOffset: 0.15
 --- !u!4 &137674549
 Transform:
   m_ObjectHideFlags: 0
@@ -949,6 +952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
+  movementClampAmount: 2.4
 --- !u!1 &2102643361
 GameObject:
   m_ObjectHideFlags: 0

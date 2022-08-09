@@ -12,6 +12,15 @@ public class InvadersSpawner : MonoBehaviour
     int columns;
     [SerializeField]
     float spacing;
+    [SerializeField]
+    float speed;
+    [SerializeField]
+    [Tooltip("how far the invaders drop down when hitting a side of the screen")]
+    float dropAmount;
+    [SerializeField]
+    [Tooltip("how close an invader can get to the edges")]
+    float boundaryOffset;
+    Vector3 direction = Vector2.right;
 
     private void Awake()
     {
@@ -35,5 +44,39 @@ public class InvadersSpawner : MonoBehaviour
                 invader.transform.localPosition = position;
             }
         }
+    }
+
+    private void Update()
+    {
+        this.transform.position += this.direction * this.speed * Time.deltaTime;
+
+        Vector3 leftSide = Camera.main.ViewportToWorldPoint(Vector3.zero);
+        Vector3 rightSide = Camera.main.ViewportToWorldPoint(Vector3.right);
+        foreach (Transform invader in this.transform)
+        {
+            //if the invader has been killed then ignore it
+            if (!invader.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            if(direction == Vector3.right && invader.position.x >= rightSide.x - boundaryOffset)
+            {
+                AdvanceToNextRow();
+            } 
+            else if (direction == Vector3.left && invader.position.x <= leftSide.x + boundaryOffset)
+            {
+                AdvanceToNextRow();
+            }
+
+        }
+    }
+
+    private void AdvanceToNextRow()
+    {
+        direction.x *= -1.0f;
+        Vector3 position = this.transform.position;
+        position.y -= dropAmount;
+        this.transform.position = position;
     }
 }
