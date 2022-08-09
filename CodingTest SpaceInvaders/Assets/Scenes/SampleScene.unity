@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 86093564}
   - component: {fileID: 86093563}
   - component: {fileID: 86093562}
+  - component: {fileID: 86093565}
   m_Layer: 0
   m_Name: bunker
   m_TagString: Untagged
@@ -234,6 +235,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &86093565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86093561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420d7214576ce6949af90f6f9a1bc6a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &137674547
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,9 +285,13 @@ MonoBehaviour:
   rows: 5
   columns: 11
   spacing: 0.34
-  speed: 0.34
+  speed: 3
   dropAmount: 0.2
   boundaryOffset: 0.15
+  timeBetweenMovements: 0.5
+  fireRate: 1
+  enemyBullet: {fileID: 3508123221831347574, guid: 7388e1e3192c8224297c1dd5b9f8bcf3,
+    type: 3}
 --- !u!4 &137674549
 Transform:
   m_ObjectHideFlags: 0
@@ -385,6 +402,7 @@ GameObject:
   - component: {fileID: 1216392432}
   - component: {fileID: 1216392431}
   - component: {fileID: 1216392430}
+  - component: {fileID: 1216392433}
   m_Layer: 0
   m_Name: bunker
   m_TagString: Untagged
@@ -485,6 +503,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1216392433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216392429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420d7214576ce6949af90f6f9a1bc6a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1651797738
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,6 +526,7 @@ GameObject:
   - component: {fileID: 1651797741}
   - component: {fileID: 1651797740}
   - component: {fileID: 1651797739}
+  - component: {fileID: 1651797742}
   m_Layer: 0
   m_Name: bunker
   m_TagString: Untagged
@@ -596,6 +627,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1651797742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651797738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420d7214576ce6949af90f6f9a1bc6a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!850595691 &1683482509
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -727,6 +770,7 @@ GameObject:
   - component: {fileID: 1724147269}
   - component: {fileID: 1724147268}
   - component: {fileID: 1724147267}
+  - component: {fileID: 1724147270}
   m_Layer: 0
   m_Name: bunker
   m_TagString: Untagged
@@ -827,6 +871,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1724147270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1724147266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 420d7214576ce6949af90f6f9a1bc6a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2054620085
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,7 +895,8 @@ GameObject:
   - component: {fileID: 2054620086}
   - component: {fileID: 2054620088}
   - component: {fileID: 2054620089}
-  m_Layer: 0
+  - component: {fileID: 2054620090}
+  m_Layer: 6
   m_Name: ship
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -953,6 +1010,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   movementClampAmount: 2.4
+  bulletPrefab: {fileID: 5355744481505213219, guid: bf1a8aaa7a728774887f9606d7d04cc3,
+    type: 3}
+--- !u!50 &2054620090
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054620085}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2102643361
 GameObject:
   m_ObjectHideFlags: 0
