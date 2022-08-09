@@ -30,7 +30,8 @@ public class InvadersSpawner : MonoBehaviour
     public int invadersKilled { get; private set; }
     public int totalInvaders => this.rows * this.columns;
     public int amountAlive => totalInvaders - invadersKilled;
-    float timer = 0;
+    float movementTimer = 0;
+    float fireTimer = 0;
     [SerializeField]
     Bullet enemyBullet;
 
@@ -68,8 +69,9 @@ public class InvadersSpawner : MonoBehaviour
 
     private void Update()
     {
-        timer += Time.deltaTime;
-        if(timer > timeBetweenMovements)
+        movementTimer += Time.deltaTime;
+        fireTimer += Time.deltaTime;
+        if(movementTimer > timeBetweenMovements)
         {
             Debug.Log("Entered timer");
 
@@ -94,9 +96,14 @@ public class InvadersSpawner : MonoBehaviour
                 }
 
             }
-            timer = 0;
+            movementTimer = 0;
         }
-        
+        if(fireTimer > fireRate)
+        {
+            fireBullet();
+            fireTimer = 0;
+        }
+
     }
 
     private void AdvanceToNextRow()
