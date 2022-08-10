@@ -1,0 +1,24 @@
+{
+    "level": [
+        {
+            "timeBetweenMovements": 0.5,
+            "timeBetweenShots": 0.8
+        },
+        {
+            "timeBetweenMovements": 0.4,
+            "timeBetweenShots": 0.7
+        },
+        {
+            "timeBetweenMovements": 0.3,
+            "timeBetweenShots": 0.6
+        },
+        {
+            "timeBetweenMovements": 0.2,
+            "timeBetweenShots": 0.5
+        },
+        {
+            "timeBetweenMovements": 0.2,
+            "timeBetweenShots": 0.3
+        }
+    ]
+}
