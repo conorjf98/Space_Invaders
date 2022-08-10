@@ -27,6 +27,7 @@ public class InvadersSpawner : MonoBehaviour
     [SerializeField]
     float fireRate;
     Vector3 direction = Vector2.right;
+    bool canChangeDirection = true;
     public int invadersKilled { get; private set; }
     public int totalInvaders => this.rows * this.columns;
     public int amountAlive => totalInvaders - invadersKilled;
@@ -53,6 +54,7 @@ public class InvadersSpawner : MonoBehaviour
                 GameObject invader = Instantiate(this.invaderTypes[row], this.transform);
                 invaders.Add(invader);
                 invader.GetComponent<Invader>().killed += InvaderKilled;
+                invader.GetComponent<Invader>().touchedBoundary += TouchedBoundary;
                 Vector3 position = rowPosition;
 
                 //adding horizontal spacing to each invader
@@ -73,31 +75,12 @@ public class InvadersSpawner : MonoBehaviour
         fireTimer += Time.deltaTime;
         if(movementTimer > timeBetweenMovements)
         {
+            canChangeDirection = true;
             Debug.Log("Entered timer");
-
-            this.transform.position += this.direction * this.speed * Time.deltaTime;
-            Vector3 leftSide = Camera.main.ViewportToWorldPoint(Vector3.zero);
-            Vector3 rightSide = Camera.main.ViewportToWorldPoint(Vector3.right);
-            foreach (Transform invader in this.transform)
-            {
-                //if the invader has been killed then ignore it
-                if (!invader.gameObject.activeInHierarchy)
-                {
-                    continue;
-                }
-
-                if (direction == Vector3.right && invader.position.x >= rightSide.x - boundaryOffset)
-                {
-                    AdvanceToNextRow();
-                }
-                else if (direction == Vector3.left && invader.position.x <= leftSide.x + boundaryOffset)
-                {
-                    AdvanceToNextRow();
-                }
-
-            }
+            this.transform.position +=  this.direction * this.speed * Time.deltaTime;
             movementTimer = 0;
         }
+
         if(fireTimer > fireRate)
         {
             fireBullet();
@@ -121,6 +104,17 @@ public class InvadersSpawner : MonoBehaviour
         {
             //win
         }
+    }
+
+    private void TouchedBoundary()
+    {
+        if (canChangeDirection)
+        {
+            AdvanceToNextRow();
+            Debug.Log("entered change direction");
+            canChangeDirection = false;
+        }
+        
     }
 
     private void fireBullet()
