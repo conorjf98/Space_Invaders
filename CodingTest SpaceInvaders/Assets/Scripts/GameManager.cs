@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 30;
         UpdateGameState(GameState.Menu);
     }
 
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.Menu:
+                break;
+            case GameState.Highscores:
                 break;
             case GameState.Playing:
                 break;
@@ -47,6 +50,7 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     Menu,
+    Highscores,
     Playing,
     Paused,
     Win,
