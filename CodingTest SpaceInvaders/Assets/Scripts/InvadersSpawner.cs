@@ -20,14 +20,12 @@ public class InvadersSpawner : MonoBehaviour
     [Tooltip("how far the invaders drop down when hitting a side of the screen")]
     float dropAmount;
     [SerializeField]
-    [Tooltip("how close an invader can get to the edges")]
-    float boundaryOffset;
-    [SerializeField]
     float timeBetweenMovements;
     [SerializeField]
-    float fireRate;
+    float timeBetweenShots;
     Vector3 direction = Vector2.right;
     bool canChangeDirection = true;
+    bool playing = false;
     public int invadersKilled { get; private set; }
     public int totalInvaders => this.rows * this.columns;
     public int amountAlive => totalInvaders - invadersKilled;
@@ -39,6 +37,22 @@ public class InvadersSpawner : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 30;
+        GameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+    }
+
+    private void GameManagerOnGameStateChanged(GameState state)
+    {
+        playing = (state == GameState.Playing); 
+    }
+
+    public void SpawnInvaders()
+    {
+        ResetInvaders();
         for (int row = 0; row < this.rows; row++)
         {
             //calculating the width and the height given the spacing values in the unity editor to center the invaders
@@ -62,30 +76,45 @@ public class InvadersSpawner : MonoBehaviour
                 invader.transform.localPosition = position;
             }
         }
+        GameManager.gManager.UpdateGameState(GameState.Playing);
+    }
+
+    public void ResetInvaders()
+    {
+        foreach (Transform child in this.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        this.transform.position = new Vector3(0.0f, 2.5f, 0.0f);
+        invadersKilled = 0;
     }
 
     private void Start()
     {
-        InvokeRepeating(nameof(fireBullet), this.fireRate, this.fireRate);
+        InvokeRepeating(nameof(fireBullet), this.timeBetweenShots, this.timeBetweenShots);
     }
 
     private void Update()
     {
-        movementTimer += Time.deltaTime;
-        fireTimer += Time.deltaTime;
-        if(movementTimer > timeBetweenMovements)
+        if (playing)
         {
-            canChangeDirection = true;
-            Debug.Log("Entered timer");
-            this.transform.position +=  this.direction * this.speed * Time.deltaTime;
-            movementTimer = 0;
-        }
+            movementTimer += Time.deltaTime;
+            fireTimer += Time.deltaTime;
+            if (movementTimer > timeBetweenMovements)
+            {
+                canChangeDirection = true;
+                this.transform.position += this.direction * this.speed * Time.deltaTime;
+                movementTimer = 0;
+            }
 
-        if(fireTimer > fireRate)
-        {
-            fireBullet();
-            fireTimer = 0;
+            if (fireTimer > timeBetweenShots)
+            {
+                fireBullet();
+                fireTimer = 0;
+            }
         }
+        
 
     }
 
@@ -102,7 +131,7 @@ public class InvadersSpawner : MonoBehaviour
 
         if(this.invadersKilled >= this.totalInvaders)
         {
-            //win
+            GameManager.gManager.UpdateGameState(GameState.Win);
         }
     }
 
@@ -111,7 +140,6 @@ public class InvadersSpawner : MonoBehaviour
         if (canChangeDirection)
         {
             AdvanceToNextRow();
-            Debug.Log("entered change direction");
             canChangeDirection = false;
         }
         
@@ -119,21 +147,24 @@ public class InvadersSpawner : MonoBehaviour
 
     private void fireBullet()
     {
-        foreach (Transform invader in this.transform)
+        if (playing)
         {
-            //if the invader has been killed then ignore it
-            if (!invader.gameObject.activeInHierarchy)
+            foreach (Transform invader in this.transform)
             {
-                continue;
-            }
-            //in the case of there being 55 enemies, theres a 1 in 55 chance for each to fire a bullet. chances increase as the enemies are killed off
-            if(Random.value < (1.0f / (float)this.amountAlive))
-            {
-                Instantiate(this.enemyBullet, invader.position, Quaternion.identity);
-                //break forces 1 bullet to be fired at once
-                break;
-            }
+                //if the invader has been killed then ignore it
+                if (!invader.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+                //in the case of there being 55 enemies, theres a 1 in 55 chance for each to fire a bullet. chances increase as the enemies are killed off
+                if (Random.value < (1.0f / (float)this.amountAlive))
+                {
+                    Instantiate(this.enemyBullet, invader.position, Quaternion.identity);
+                    //break forces 1 bullet to be fired at once
+                    break;
+                }
 
-        }
+            }
+        } 
     }
 }

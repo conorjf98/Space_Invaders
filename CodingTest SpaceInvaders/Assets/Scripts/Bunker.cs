@@ -6,7 +6,7 @@ public class Bunker : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Invader"))
         {
-            //Lose
+            GameManager.gManager.UpdateGameState(GameState.Lose);
         }
     }
 }

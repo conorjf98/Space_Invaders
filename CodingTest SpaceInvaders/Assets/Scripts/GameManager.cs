@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
     public static GameManager gManager;
     public GameState state;
     public static event Action<GameState> OnGameStateChanged;
+
+    private void Start()
+    {
+        UpdateGameState(GameState.Menu);
+    }
+
     private void Awake()
     {
         gManager = this;
@@ -35,8 +41,6 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState);
 
     }
-
-    
 }
 
     
