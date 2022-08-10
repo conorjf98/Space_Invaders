@@ -27,7 +27,6 @@ public class Player : MonoBehaviour
     {     
         canMove = (state == GameState.Playing);
         paused = (state == GameState.Paused);
-        Debug.Log(state +", "+ canMove);
     }
 
     private void Update()

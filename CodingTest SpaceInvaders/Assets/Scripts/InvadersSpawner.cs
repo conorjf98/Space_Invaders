@@ -7,7 +7,6 @@ public class InvadersSpawner : MonoBehaviour
     [SerializeField]
     //different variants of invader (narrow, wide..)
     GameObject[] invaderTypes;
-    List<GameObject> invaders = new List<GameObject>();
     [SerializeField]
     int rows;
     [SerializeField]
@@ -33,6 +32,9 @@ public class InvadersSpawner : MonoBehaviour
     float fireTimer = 0;
     [SerializeField]
     Bullet enemyBullet;
+    [SerializeField]
+    GameObject[] bunkers;
+
 
     private void Awake()
     {
@@ -51,6 +53,10 @@ public class InvadersSpawner : MonoBehaviour
 
     public void SpawnInvaders()
     {
+        
+        int currentLevel = GameManager.gManager.currentLevel;
+        timeBetweenMovements = LevelManager.lManager.levelList.level[currentLevel].timeBetweenMovements;
+        timeBetweenShots = LevelManager.lManager.levelList.level[currentLevel].timeBetweenShots;
         ResetInvaders();
         for (int row = 0; row < this.rows; row++)
         {
@@ -65,7 +71,6 @@ public class InvadersSpawner : MonoBehaviour
             {
                 
                 GameObject invader = Instantiate(this.invaderTypes[row], this.transform);
-                invaders.Add(invader);
                 invader.GetComponent<Invader>().killed += InvaderKilled;
                 invader.GetComponent<Invader>().touchedBoundary += TouchedBoundary;
                 Vector3 position = rowPosition;
@@ -85,13 +90,17 @@ public class InvadersSpawner : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
 
+        //regenerate all bunkers
+        foreach (GameObject bunker in this.bunkers)
+        {
+            foreach (Transform child in bunker.transform)
+            {
+                child.gameObject.SetActive(true);
+            }
+        }
+
         this.transform.position = new Vector3(0.0f, 2.5f, 0.0f);
         invadersKilled = 0;
-    }
-
-    private void Start()
-    {
-        InvokeRepeating(nameof(fireBullet), this.timeBetweenShots, this.timeBetweenShots);
     }
 
     private void Update()

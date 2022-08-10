@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager gManager;
     public GameState state;
     public static event Action<GameState> OnGameStateChanged;
-
+    public int currentLevel = 0;
     private void Start()
     {
         Application.targetFrameRate = 30;
@@ -34,8 +34,10 @@ public class GameManager : MonoBehaviour
             case GameState.Paused:
                 break;
             case GameState.Win:
+                HandleWin();
                 break;
             case GameState.Lose:
+                HandleLose();
                 break;
             default:
                 break;
@@ -43,6 +45,20 @@ public class GameManager : MonoBehaviour
 
         OnGameStateChanged?.Invoke(newState);
 
+    }
+
+    private void HandleLose()
+    {
+        currentLevel = 0;
+    }
+
+    private void HandleWin()
+    {
+        currentLevel++;
+        if(currentLevel >= LevelManager.lManager.levelList.level.Length)
+        {
+            currentLevel = 0;
+        }
     }
 }
 

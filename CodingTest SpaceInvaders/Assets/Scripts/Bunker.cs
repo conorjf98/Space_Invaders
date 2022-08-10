@@ -8,5 +8,10 @@ public class Bunker : MonoBehaviour
         {
             GameManager.gManager.UpdateGameState(GameState.Lose);
         }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyBullet"))
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

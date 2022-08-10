@@ -21,9 +21,9 @@ public class ScoreManager : MonoBehaviour
     [SerializeField]
     GameObject leaderboardPanel;
     [SerializeField]
-    List<LeaderboardEntry> leaderboardEntries;
-    [SerializeField]
     GameObject highscorePrefab;
+    [SerializeField]
+    LeaderboardEntry lossUIEntry, winUIEntry;
     private void Start()
     {
         sManager = this;
@@ -42,14 +42,23 @@ public class ScoreManager : MonoBehaviour
     private void GameManagerOnGameStateChanged(GameState state)
     {
         //reset the current score after a win or a loss
-        if (state == GameState.Win || state == GameState.Lose) 
+        if (state == GameState.Lose) 
         {
+            //updating ui on loss screen to display the final score
+            lossUIEntry.playerName.text = currentScoreNameText.text;
+            
+            
+            //create a highscore object to compare to the saved highscores
             Highscore hs = new Highscore();
             hs.playerName = currentScoreNameText.text;
             hs.score = currentScore;
             SaveManager.sManager.CheckScore(hs);
             currentScore = 0;
             currentScoreText.text = currentScore.ToString();
+            
+        } else if (state == GameState.Win)
+        {
+            winUIEntry.playerName.text = currentScoreNameText.text;
             
         }
     }
@@ -62,7 +71,9 @@ public class ScoreManager : MonoBehaviour
         if(currentScore > highscore)
         {
             highscore = currentScore;
+            lossUIEntry.score.text = currentScore.ToString();
             HighscoreScoreText.text = highscore.ToString();
+            winUIEntry.score.text = currentScore.ToString();
             HighscoreNameText.text = currentScoreNameText.text;
         }
     }
@@ -70,9 +81,15 @@ public class ScoreManager : MonoBehaviour
     public void SetupScores()
     {
         currentScoreNameText.text = nameInput.text;
-        HighscoreNameText.text = SaveManager.sManager.savedHighscores[0].playerName;
-        highscore = SaveManager.sManager.savedHighscores[0].score;
-        HighscoreScoreText.text = highscore.ToString();
+        int savedHighscore = SaveManager.sManager.savedHighscores[0].score;
+        //if the session is still continuing and the user has a higher score than the saved score
+        if(savedHighscore > highscore)
+        {
+            highscore = savedHighscore;
+            HighscoreNameText.text = SaveManager.sManager.savedHighscores[0].playerName;
+            HighscoreScoreText.text = highscore.ToString();
+        }
+        
     }
 
     public void SetupLeaderboards()
